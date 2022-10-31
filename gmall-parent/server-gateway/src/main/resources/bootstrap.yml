@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: server-gateway
+  cloud:
+    nacos:
+      server-addr: http://110.40.190.216:8848
+      config:
+        shared-configs:
+          - data-id: zipkin.yaml

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 定义接口的全路径-->
+<mapper namespace="com.hilda.product.mapper.BaseAttrInfoMapper">
+
+    <resultMap id="baseAttrInfoMap" type="BaseAttrInfo" autoMapping="true">
+        <id property="id" column="id"></id>
+        <result column="attr_name" property="attrName"></result>
+        <!-- 符合驼峰命名的字段可以省略 -->
+        <!--<result column="category_id" property="categoryId"></result>-->
+        <result column="category_level" property="categoryLevel"></result>
+        <collection property="attrValueList" ofType="BaseAttrValue" autoMapping="true">
+            <id property="id" column="vid"></id>
+            <!--<result column="value_name" property="valueName"></result>
+            <result column="attr_id" property="attrId"></result>-->
+        </collection>
+    </resultMap>
+    
+    <select id="getBaseAttrInfoListByCategoryIds" parameterType="long" resultMap="baseAttrInfoMap">
+        SELECT bai.id,
+               bai.attr_name,
+               bai.category_id,
+               bai.category_level,
+               bav.id vid,
+               bav.value_name,
+               bav.attr_id
+        FROM base_attr_info bai
+        LEFT JOIN base_attr_value bav
+        ON bai.id = bav.attr_id
+        <where>
+            <if test="category1Id != 0">
+                (bai.category_id = #{category1Id} AND bai.category_level = 1)
+            </if>
+            <if test="category2Id != 0">
+                or (bai.category_id = #{category2Id} AND bai.category_level = 2)
+            </if>
+            <if test="category3Id != 0">
+                or (bai.category_id = #{category3Id} AND bai.category_level = 3)
+            </if>
+        </where>
+    </select>
+
+</mapper>
