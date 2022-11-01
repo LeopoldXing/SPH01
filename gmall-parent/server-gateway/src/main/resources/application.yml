@@ -13,3 +13,5 @@ spring:
           '[/**]':
             allowedOrigins: "*"
             allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true # Cookie

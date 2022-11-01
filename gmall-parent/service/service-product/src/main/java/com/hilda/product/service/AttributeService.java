@@ -12,6 +12,10 @@ public interface AttributeService {
 
     List<BaseAttrInfo> getAttrInfoList(Long category1Id, Long category2Id, Long category3Id);
 
+    Boolean saveBaseAttrInfo(BaseAttrInfo baseAttrInfo);
+
+    BaseAttrInfo getAttrInfoById(Long id);
+
     /**
      * 根据三个级别的的categoryId来计算其的层级
      * @param category1Id
@@ -35,6 +39,7 @@ public interface AttributeService {
      * @return
      */
     default void packBaseAttrInfo (BaseAttrInfo baseAttrInfo, BaseAttrValueMapper baseAttrValueMapper) {
+        if (baseAttrInfo == null || baseAttrValueMapper == null) return;
         Long attr_id = baseAttrInfo.getId();
         LambdaQueryWrapper<BaseAttrValue> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BaseAttrValue::getAttrId, attr_id);
