@@ -2,8 +2,8 @@ package com.hilda.product.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hilda.common.execption.GmallException;
-import com.hilda.model.product.BaseAttrInfo;
-import com.hilda.model.product.BaseAttrValue;
+import com.hilda.model.bean.product.BaseAttrInfo;
+import com.hilda.model.bean.product.BaseAttrValue;
 import com.hilda.product.mapper.BaseAttrValueMapper;
 
 import java.util.List;

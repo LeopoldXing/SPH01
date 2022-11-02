@@ -1,9 +1,9 @@
 package com.hilda.product.controller;
 
 import com.hilda.common.result.Result;
-import com.hilda.model.product.BaseCategory1;
-import com.hilda.model.product.BaseCategory2;
-import com.hilda.model.product.BaseCategory3;
+import com.hilda.model.bean.product.BaseCategory1;
+import com.hilda.model.bean.product.BaseCategory2;
+import com.hilda.model.bean.product.BaseCategory3;
 import com.hilda.product.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -3,13 +3,15 @@ package com.hilda.product.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hilda.common.execption.GmallException;
-import com.hilda.model.product.BaseTrademark;
+import com.hilda.model.bean.product.BaseTrademark;
 import com.hilda.product.mapper.TrademarkMapper;
 import com.hilda.product.service.TrademarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Service
 public class TrademarkServiceImpl implements TrademarkService {
@@ -55,6 +57,12 @@ public class TrademarkServiceImpl implements TrademarkService {
         if (id == null) return false;
         trademarkMapper.deleteById(id);
         return true;
+    }
+
+    @Override
+    public List<BaseTrademark> getTrademarkList() {
+        List<BaseTrademark> baseTrademarkList = trademarkMapper.selectList(null);
+        return baseTrademarkList;
     }
 
 }

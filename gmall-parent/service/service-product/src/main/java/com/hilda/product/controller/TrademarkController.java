@@ -2,12 +2,14 @@ package com.hilda.product.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hilda.common.result.Result;
-import com.hilda.model.product.BaseTrademark;
+import com.hilda.model.bean.product.BaseTrademark;
 import com.hilda.product.service.TrademarkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api("商标接口")
 @RestController
@@ -48,6 +50,13 @@ public class TrademarkController {
     @DeleteMapping("/baseTrademark/remove/{id}")
     public Result deleteTrademarkById(@PathVariable Long id) {
         return trademarkService.deleteTrademarkById(id) ? Result.ok() : Result.fail();
+    }
+
+    @ApiOperation("获取品牌属性")
+    @GetMapping("/baseTrademark/getTrademarkList")
+    public Result<List<BaseTrademark>> getTrademarkList() {
+        List<BaseTrademark> baseTrademarkList = trademarkService.getTrademarkList();
+        return baseTrademarkList == null ? Result.fail() : Result.ok(baseTrademarkList);
     }
 
 }

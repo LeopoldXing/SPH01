@@ -1,8 +1,8 @@
 package com.hilda.product.controller;
 
 import com.hilda.common.result.Result;
-import com.hilda.model.product.BaseAttrInfo;
-import com.hilda.model.product.BaseAttrValue;
+import com.hilda.model.bean.product.BaseAttrInfo;
+import com.hilda.model.bean.product.BaseAttrValue;
 import com.hilda.product.service.AttributeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

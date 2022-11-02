@@ -1,8 +1,8 @@
 package com.hilda.product.service;
 
-import com.hilda.model.product.BaseCategory1;
-import com.hilda.model.product.BaseCategory2;
-import com.hilda.model.product.BaseCategory3;
+import com.hilda.model.bean.product.BaseCategory1;
+import com.hilda.model.bean.product.BaseCategory2;
+import com.hilda.model.bean.product.BaseCategory3;
 
 import java.util.List;
 

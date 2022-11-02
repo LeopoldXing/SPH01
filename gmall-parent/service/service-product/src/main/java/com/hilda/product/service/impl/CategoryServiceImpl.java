@@ -2,10 +2,9 @@ package com.hilda.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hilda.common.execption.GmallException;
-import com.hilda.model.product.BaseAttrInfo;
-import com.hilda.model.product.BaseCategory1;
-import com.hilda.model.product.BaseCategory2;
-import com.hilda.model.product.BaseCategory3;
+import com.hilda.model.bean.product.BaseCategory1;
+import com.hilda.model.bean.product.BaseCategory2;
+import com.hilda.model.bean.product.BaseCategory3;
 import com.hilda.product.mapper.*;
 import com.hilda.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,9 @@
 package com.hilda.product.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.hilda.model.product.BaseTrademark;
+import com.hilda.model.bean.product.BaseTrademark;
+
+import java.util.List;
 
 public interface TrademarkService {
 
@@ -14,5 +16,7 @@ public interface TrademarkService {
     Boolean updateTrademark(BaseTrademark baseTrademark);
 
     Boolean deleteTrademarkById(Long id);
+
+    List<BaseTrademark> getTrademarkList();
 
 }

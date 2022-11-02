@@ -1,0 +1,42 @@
+{
+  "category3Id": 61,
+  "description": "小米12SUltra徕卡专业光学镜头,1英寸大底专业主摄,骁龙8+处理器,2K超视感屏",
+  "id": null,
+  "spuImageList": [],
+  "spuName": "小米12S Ultra",
+  "spuSaleAttrList": [
+    {
+      "baseSaleAttrId": "1",
+      "saleAttrName": "选择颜色",
+      "spuSaleAttrValueList": [
+        {
+          "baseSaleAttrId": "1",
+          "saleAttrValueName": "黑色"
+        },
+        {
+          "baseSaleAttrId": "1",
+          "saleAttrValueName": "冷杉绿"
+        }
+      ]
+    },
+    {
+      "baseSaleAttrId": "2",
+      "saleAttrName": "选择版本",
+      "spuSaleAttrValueList": [
+        {
+          "baseSaleAttrId": "2",
+          "saleAttrValueName": "8GB+256GB"
+        },
+        {
+          "baseSaleAttrId": "2",
+          "saleAttrValueName": "12GB+256GB"
+        },
+        {
+          "baseSaleAttrId": "2",
+          "saleAttrValueName": "12GB+512GB"
+        }
+      ]
+    }
+  ],
+  "tmId": 4
+}
