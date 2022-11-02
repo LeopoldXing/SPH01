@@ -2,16 +2,14 @@ package com.hilda.product;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.hilda.common.config.minio.annotation.EnableMinio;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@EnableDiscoveryClient
-@ComponentScan("com.hilda")
+@SpringCloudApplication
+@EnableMinio
 @MapperScan(basePackages = "com.hilda.product.mapper")
 public class ServiceProductApplication {
     public static void main(String[] args) {

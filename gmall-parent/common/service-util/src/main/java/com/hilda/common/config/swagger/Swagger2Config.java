@@ -1,4 +1,4 @@
-package com.hilda.common.config;
+package com.hilda.common.config.swagger;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

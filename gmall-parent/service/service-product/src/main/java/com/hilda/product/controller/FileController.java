@@ -51,8 +51,6 @@ public class FileController {
             e.printStackTrace();
         }
 
-        System.out.println("url:\t"+url);
-
         return Result.ok(url);
     }
 
