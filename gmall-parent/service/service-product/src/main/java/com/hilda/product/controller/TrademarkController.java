@@ -7,7 +7,6 @@ import com.hilda.product.service.TrademarkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Api("商标接口")
@@ -35,8 +34,8 @@ public class TrademarkController {
 
     @ApiOperation("添加品牌")
     @PostMapping("/baseTrademark/save")
-    public Result addTrademark(@RequestParam("tmName") String trademarkName, @RequestParam("logoUrl") String logoUrl) {
-        return trademarkService.addTrademark(trademarkName, logoUrl) ? Result.ok() : Result.fail();
+    public Result addTrademark(@RequestBody BaseTrademark baseTrademark) {
+        return trademarkService.addTrademark(baseTrademark) ? Result.ok() : Result.fail();
     }
 
     @ApiOperation("修改品牌")

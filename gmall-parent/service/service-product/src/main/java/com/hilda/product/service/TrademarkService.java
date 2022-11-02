@@ -9,7 +9,7 @@ public interface TrademarkService {
 
     IPage<BaseTrademark> getTrademarkInPages(Integer current, Integer size);
 
-    Boolean addTrademark(String trademarkName, String logoUrl);
+    Boolean addTrademark(BaseTrademark baseTrademark);
 
     Boolean updateTrademark(BaseTrademark baseTrademark);
 

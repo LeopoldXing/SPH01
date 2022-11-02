@@ -35,12 +35,10 @@ public class TrademarkServiceImpl implements TrademarkService {
     }
 
     @Override
-    public Boolean addTrademark(String trademarkName, String logoUrl) {
-        if (StringUtils.isEmpty(trademarkName) || StringUtils.isEmpty(logoUrl)) return false;
+    public Boolean addTrademark(BaseTrademark baseTrademark) {
+        if (ObjectUtils.isEmpty(baseTrademark)) return false;
+        if (StringUtils.isEmpty(baseTrademark.getTmName())) return false;
 
-        BaseTrademark baseTrademark = new BaseTrademark();
-        baseTrademark.setLogoUrl(logoUrl);
-        baseTrademark.setTmName(trademarkName);
         return trademarkMapper.insert(baseTrademark) > 0;
     }
 
