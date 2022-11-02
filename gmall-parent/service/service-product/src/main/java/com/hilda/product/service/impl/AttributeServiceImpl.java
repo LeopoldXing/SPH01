@@ -66,7 +66,7 @@ public class AttributeServiceImpl implements AttributeService {
 
             // 删除平台属性值
             LambdaQueryWrapper<BaseAttrValue> deleteQueryWrapper = new LambdaQueryWrapper<>();
-            if (updateAttrValueList.size() == 0) {
+            if (ObjectUtils.isEmpty(updateAttrValueList)) {
                 // 全部删除
                 deleteQueryWrapper.eq(BaseAttrValue::getAttrId, attrId);
             } else {
@@ -76,7 +76,7 @@ public class AttributeServiceImpl implements AttributeService {
                                 updateAttrValueList.parallelStream().map(baseAttrValue -> {
                                     Long id = baseAttrValue.getId();
                                     if (id != null && id > 0) return id;
-                                    else return 0;
+                                    else return -1;
                                 }).collect(Collectors.toList()))
                         .eq(BaseAttrValue::getAttrId, attrId);
             }
