@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,8 +73,7 @@ public class AttributeServiceImpl implements AttributeService {
             } else {
                 // 部分删除
                 deleteQueryWrapper
-                        .notIn(BaseAttrValue::getId,
-                                updateAttrValueList.parallelStream().map(baseAttrValue -> {
+                        .notIn(BaseAttrValue::getId, updateAttrValueList.parallelStream().distinct().map(baseAttrValue -> {
                                     Long id = baseAttrValue.getId();
                                     if (id != null && id > 0) return id;
                                     else return -1;
