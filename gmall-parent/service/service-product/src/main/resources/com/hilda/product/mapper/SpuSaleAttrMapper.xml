@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 定义接口的全路径-->
+<mapper namespace="com.hilda.product.mapper.SpuSaleAttrMapper">
+
+    <resultMap id="spuSaleAttrMap" type="SpuSaleAttr" autoMapping="true">
+        <id property="id" column="id"></id>
+        <result column="spu_id" property="spuId"></result>
+        <result property="baseSaleAttrId" column="base_sale_attr_id"></result>
+        <collection property="spuSaleAttrValueList" ofType="SpuSaleAttrValue" autoMapping="true">
+            <id column="vid" property="id"></id>
+            <result property="spuId" column="spu_id"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getSpuSaleAttrListBySpuId" parameterType="long" resultMap="spuSaleAttrMap">
+        SELECT ssa.id, ssav.id vid, ssa.spu_id, ssa.base_sale_attr_id, ssa.sale_attr_name, ssav.sale_attr_value_name
+        FROM spu_sale_attr ssa
+        LEFT JOIN spu_sale_attr_value ssav
+        ON ssa.base_sale_attr_id = ssav.base_sale_attr_id
+        WHERE ssa.spu_id = #{spuId} AND ssav.spu_id = #{spuId}
+    </select>
+
+</mapper>

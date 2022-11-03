@@ -1,9 +1,9 @@
 package com.hilda.product.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hilda.model.bean.product.BaseSaleAttr;
+import com.hilda.model.bean.product.SkuImage;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BaseSaleAttrMapper extends BaseMapper<BaseSaleAttr> {
+public interface SkuImageMapper extends BaseMapper<SkuImage> {
 }

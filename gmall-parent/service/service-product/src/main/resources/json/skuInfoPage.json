@@ -1,0 +1,23 @@
+{
+  "records":[
+    {
+      "id":10,
+      "spuId":2,
+      "price":3999,
+      "skuName":"华为 HUAWEI Mate 30 手机",
+      "skuDesc":"主体（mm） 9.2 运营商标志或内容 无",
+      "weight":"0.55",
+      "tmId":2,
+      "category3Id":61,
+      "skuDefaultImg":"http://192.168.200.128:8080/group1/M00/00/00/wKjIgF42TsmAZc7HAANJjSt4ynk994.jpg",
+      "isSale":0,
+      "skuImageList":null,
+      "skuAttrValueList":null,
+      "skuSaleAttrValueList":null
+    }
+  ],
+  "total":11,
+  "size":10,
+  "current":1,
+  "pages":2
+}

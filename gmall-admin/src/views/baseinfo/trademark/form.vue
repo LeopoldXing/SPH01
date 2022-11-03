@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       trademark: defaultForm,
-      saveBtnDisabled: false, // 保存按钮是否禁用
+      saveBtnDisabled: false, // 保存按钮是否禁用 
       BASE_API: process.env.BASE_API
     }
   },

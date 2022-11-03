@@ -3,7 +3,9 @@ package com.hilda.product.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hilda.common.result.Result;
 import com.hilda.model.bean.product.BaseSaleAttr;
+import com.hilda.model.bean.product.SpuImage;
 import com.hilda.model.bean.product.SpuInfo;
+import com.hilda.model.bean.product.SpuSaleAttr;
 import com.hilda.model.vo.product.SpuInfoVo;
 import com.hilda.product.service.SpuService;
 import io.swagger.annotations.Api;
@@ -42,6 +44,20 @@ public class SpuController {
     @PostMapping("/saveSpuInfo")
     public Result addSpu(@RequestBody SpuInfoVo spuInfoVo) {
         return spuService.addSpu(spuInfoVo) ? Result.ok() : Result.fail();
+    }
+
+    @ApiOperation("根据SpuId获取图片列表")
+    @GetMapping("/spuImageList/{spuId}")
+    public Result<List<SpuImage>> getImageListBySpuId(@PathVariable Long spuId) {
+        List<SpuImage> spuImageList = spuService.getImageListBySpuId(spuId);
+        return spuImageList == null ? Result.fail() : Result.ok(spuImageList);
+    }
+
+    @ApiOperation("根据SpuId获取销售属性")
+    @GetMapping("/spuSaleAttrList/{spuId}")
+    public Result<List<SpuSaleAttr>> getSpuSaleAttrListBySpuId(@PathVariable Long spuId) {
+        List<SpuSaleAttr> spuSaleAttrList = spuService.getSpuSaleAttrListBySpuId(spuId);
+        return spuSaleAttrList == null ? Result.fail() : Result.ok(spuSaleAttrList);
     }
 
 }

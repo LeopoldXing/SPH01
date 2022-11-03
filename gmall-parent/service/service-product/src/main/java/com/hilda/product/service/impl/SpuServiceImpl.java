@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hilda.common.execption.GmallException;
 import com.hilda.model.bean.product.*;
 import com.hilda.model.vo.product.SpuInfoVo;
-import com.hilda.product.mapper.BaseSaleAttrMapper;
+import com.hilda.product.mapper.SpuSaleAttrMapper;
 import com.hilda.product.mapper.SpuImageMapper;
 import com.hilda.product.mapper.SpuInfoMapper;
 import com.hilda.product.mapper.SpuSaleAttrValueMapper;
@@ -25,7 +25,7 @@ public class SpuServiceImpl implements SpuService {
     private SpuInfoMapper spuInfoMapper;
 
     @Autowired
-    private BaseSaleAttrMapper baseSaleAttrMapper;
+    private SpuSaleAttrMapper spuSaleAttrMapper;
 
     @Autowired
     private SpuImageMapper spuImageMapper;
@@ -50,7 +50,7 @@ public class SpuServiceImpl implements SpuService {
 
     @Override
     public List<BaseSaleAttr> getBaseSaleAttrList() {
-        return baseSaleAttrMapper.selectList(null);
+        return spuSaleAttrMapper.selectList(null);
     }
 
     @Override
@@ -93,6 +93,21 @@ public class SpuServiceImpl implements SpuService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<SpuImage> getImageListBySpuId(Long spuId) {
+        if (spuId == null || spuId <= 0) throw new GmallException("SpuId为空", 100);
+        LambdaQueryWrapper<SpuImage> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SpuImage::getSpuId, spuId);
+        List<SpuImage> spuImageList = spuImageMapper.selectList(queryWrapper);
+        return spuImageList;
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListBySpuId(Long spuId) {
+        if (spuId == null || spuId <= 0) throw new GmallException("SpuId为空", 100);
+        return spuSaleAttrMapper.getSpuSaleAttrListBySpuId(spuId);
     }
 
 }
