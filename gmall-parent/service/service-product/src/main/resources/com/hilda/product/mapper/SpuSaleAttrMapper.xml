@@ -19,6 +19,7 @@
         LEFT JOIN spu_sale_attr_value ssav
         ON ssa.base_sale_attr_id = ssav.base_sale_attr_id
         WHERE ssa.spu_id = #{spuId} AND ssav.spu_id = #{spuId}
+        ORDER BY vid
     </select>
 
 </mapper>

@@ -5,6 +5,8 @@ import com.hilda.common.execption.GmallException;
 import com.hilda.model.bean.product.BaseCategory1;
 import com.hilda.model.bean.product.BaseCategory2;
 import com.hilda.model.bean.product.BaseCategory3;
+import com.hilda.model.bean.product.BaseCategoryView;
+import com.hilda.model.vo.product.CategoryVo;
 import com.hilda.product.mapper.*;
 import com.hilda.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private BaseCategory3Mapper baseCategory3Mapper;
+
+    @Autowired
+    private BaseCategoryViewMapper baseCategoryViewMapper;
 
     @Override
     public List<BaseCategory1> getFirstLevelCategoryList() {
@@ -43,6 +48,20 @@ public class CategoryServiceImpl implements CategoryService {
         LambdaQueryWrapper<BaseCategory3> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BaseCategory3::getCategory2Id, category2Id);
         return baseCategory3Mapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public BaseCategoryView getCategoryViewByCategory3Id(Long category3Id) {
+        if (category3Id == null || category3Id <= 0) throw new GmallException("三级分类id为空", 100);
+
+        BaseCategoryView baseCategoryView = baseCategoryViewMapper.getBaseCategoryViewByCategory3Id(category3Id);
+        return baseCategoryView;
+    }
+
+    @Override
+    public List<CategoryVo> getCategoryVoList() {
+        List<CategoryVo> categoryVo = baseCategory3Mapper.getCategoryVoList();
+        return categoryVo;
     }
 
 }

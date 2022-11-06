@@ -8,6 +8,7 @@ import com.hilda.model.bean.activity.CouponInfo;
 import com.hilda.model.bean.base.BaseEntity;
 import com.hilda.model.bean.enums.ActivityType;
 import com.hilda.model.bean.enums.CouponType;
+import com.hilda.model.vo.order.OrderDetailVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

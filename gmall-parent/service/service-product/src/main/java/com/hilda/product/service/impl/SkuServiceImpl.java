@@ -1,12 +1,10 @@
 package com.hilda.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hilda.common.execption.GmallException;
-import com.hilda.model.bean.product.SkuAttrValue;
-import com.hilda.model.bean.product.SkuImage;
-import com.hilda.model.bean.product.SkuInfo;
-import com.hilda.model.bean.product.SkuSaleAttrValue;
+import com.hilda.model.bean.product.*;
 import com.hilda.product.mapper.SkuAttrValueMapper;
 import com.hilda.product.mapper.SkuImageMapper;
 import com.hilda.product.mapper.SkuInfoMapper;
@@ -33,6 +31,19 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
 
     @Autowired
     private SkuImageMapper skuImageMapper;
+
+    @Override
+    public SkuInfo getSkuInfoById(Long skuId) {
+        if (skuId == null || skuId <= 0) throw new GmallException("SkuId为空", 100);
+
+        //TODO 查询 SkuInfo
+        SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
+
+        //TODO 封装 SkuInfo
+        this.packSkuInfo(skuId, skuInfo, skuImageMapper, skuAttrValueMapper, skuSaleAttrValueMapper);
+
+        return skuInfo;
+    }
 
     @Override
     public Page<SkuInfo> getSkuInfoInPages(Integer current, Integer size) {

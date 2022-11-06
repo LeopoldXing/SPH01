@@ -32,5 +32,8 @@ public class SkuSaleAttrValue extends BaseEntity {
 	@TableField("sale_attr_value_id")
 	private Long saleAttrValueId;
 
+	@TableField(exist = false)
+	private Boolean isChecked;
+
 }
 

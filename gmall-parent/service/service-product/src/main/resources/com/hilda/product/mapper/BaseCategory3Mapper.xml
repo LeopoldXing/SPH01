@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 定义接口的全路径-->
+<mapper namespace="com.hilda.product.mapper.BaseCategory3Mapper">
+
+    <resultMap id="baseCategoryViewMap" type="CategoryVo">
+        <id column="bc1_id" property="categoryId"></id>
+        <result property="categoryName" column="bc1_name"></result>
+        <collection property="categoryChild" ofType="CategoryVo">
+            <id column="bc2_id" property="categoryId"></id>
+            <result property="categoryName" column="bc2_name"></result>
+            <collection property="categoryChild" ofType="CategoryVo">
+                <id column="bc3_id" property="categoryId"></id>
+                <result property="categoryName" column="bc3_name"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getCategoryVoList" resultMap="baseCategoryViewMap">
+        SELECT bc1.id bc1_id,
+               bc2.id bc2_id,
+               bc3.id bc3_id,
+               bc1.`name` bc1_name,
+               bc2.`name` bc2_name,
+               bc3.`name` bc3_name
+        FROM base_category1 bc1
+                 LEFT JOIN base_category2 bc2
+                           ON bc2.category1_id = bc1.id
+                 LEFT JOIN base_category3 bc3
+                           ON bc3.category2_id = bc2.id
+    </select>
+
+</mapper>
