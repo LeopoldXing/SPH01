@@ -10,11 +10,13 @@ import com.hilda.product.service.SkuService;
 import com.hilda.product.service.SpuService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +40,12 @@ public class ProductApiController {
     public SkuInfo getSkuInfoById(@PathVariable("skuId") Long skuId){
         SkuInfo skuInfoById = skuService.getSkuInfoById(skuId);
         return skuInfoById;
+    }
+
+    @GetMapping("/getSkuPrice/{skuId}")
+    public BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId) {
+        BigDecimal price = skuService.getSkuPrice(skuId);
+        return price;
     }
 
     @GetMapping("/getCategoryView/{category3Id}")
@@ -64,7 +72,10 @@ public class ProductApiController {
 
         List<SkuSaleAttrJsonValueVo> skuSaleAttrJsonValueVoList = skuService.getSkuIdListAndValue(skuId);
         for (SkuSaleAttrJsonValueVo skuSaleAttrJsonValueVo : skuSaleAttrJsonValueVoList) {
-            res.put(skuSaleAttrJsonValueVo.getJsonValue(), skuSaleAttrJsonValueVo.getSkuId());
+            String jsonValue = skuSaleAttrJsonValueVo.getJsonValue();
+            if (!StringUtils.isEmpty(jsonValue)) {
+                res.put(jsonValue , skuSaleAttrJsonValueVo.getSkuId());
+            }
         }
         return res;
     }

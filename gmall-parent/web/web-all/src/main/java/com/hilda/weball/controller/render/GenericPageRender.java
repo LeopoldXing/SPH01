@@ -47,6 +47,7 @@ public class GenericPageRender {
         modelAndView.addObject("skuInfo", skuDetailVo.getSkuInfo());
         modelAndView.addObject("spuSaleAttrList", skuDetailVo.getSpuSaleAttrList());
         modelAndView.addObject("valuesSkuJson", skuDetailVo.getValuesSkuJson());
+        modelAndView.addObject("price", skuDetailVo.getPrice());
 
         return modelAndView;
     }

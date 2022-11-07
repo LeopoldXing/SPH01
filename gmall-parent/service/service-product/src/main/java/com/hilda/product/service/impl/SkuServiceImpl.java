@@ -1,5 +1,6 @@
 package com.hilda.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hilda.common.execption.GmallException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -122,6 +124,14 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
     @Override
     public List<SkuSaleAttrJsonValueVo> getSkuIdListAndValue(Long skuId) {
         return spuSaleAttrMapper.getSpuSaleAttrIdListAndValue(skuId);
+    }
+
+    @Override
+    public BigDecimal getSkuPrice(Long skuId) {
+        LambdaQueryWrapper<SkuInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SkuInfo::getId, skuId).select(SkuInfo::getPrice);
+        SkuInfo skuInfo = skuInfoMapper.selectOne(queryWrapper);
+        return skuInfo.getPrice();
     }
 
 }

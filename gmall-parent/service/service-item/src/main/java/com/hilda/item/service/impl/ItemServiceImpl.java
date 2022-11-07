@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -38,7 +39,12 @@ public class ItemServiceImpl implements ItemService {
         res.setSpuSaleAttrList(spuSaleAttrList);
 
         //TODO 查询销售属性值Id 与skuId 组合的map
-        res.setValuesSkuJson(JSON.toJSONString(productFeignClient.getSkuValueIdsMap(skuId)));
+        Map<String, Object> map = productFeignClient.getSkuValueIdsMap(skuId);
+        if (ObjectUtils.isEmpty(map)) res.setValuesSkuJson("");
+        else res.setValuesSkuJson(JSON.toJSONString(map));
+
+        //TODO 查询 SKU 价格
+        res.setPrice(productFeignClient.getSkuPrice(skuId));
 
         return res;
     }
