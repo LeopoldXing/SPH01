@@ -1,6 +1,6 @@
 package com.hilda.item.service;
 
-import java.util.Map;
+import com.hilda.model.vo.item.SkuDetailVo;
 
 public interface ItemService {
 
@@ -15,6 +15,6 @@ public interface ItemService {
      * @param skuId
      * @return
      */
-    Map<String, Object> getSkuDetailById(Long skuId);
+    SkuDetailVo getSkuDetailBySkuId(Long skuId);
 
 }

@@ -29,7 +29,7 @@ public class ProductDegradeFeignClient implements ProductFeignClient {
     }
 
     @Override
-    public List<SpuSaleAttr> getSpuSaleAttrList(Long skuId, Long spuId) {
+    public List<SpuSaleAttr> getSpuSaleAttrList(Long spuId, Long skuId) {
         return null;
     }
 

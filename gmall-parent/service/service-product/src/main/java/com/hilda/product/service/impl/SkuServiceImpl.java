@@ -1,14 +1,11 @@
 package com.hilda.product.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hilda.common.execption.GmallException;
 import com.hilda.model.bean.product.*;
-import com.hilda.product.mapper.SkuAttrValueMapper;
-import com.hilda.product.mapper.SkuImageMapper;
-import com.hilda.product.mapper.SkuInfoMapper;
-import com.hilda.product.mapper.SkuSaleAttrValueMapper;
+import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
+import com.hilda.product.mapper.*;
 import com.hilda.product.service.SkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,9 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
 
     @Autowired
     private SkuImageMapper skuImageMapper;
+
+    @Autowired
+    private SpuSaleAttrMapper spuSaleAttrMapper;
 
     @Override
     public SkuInfo getSkuInfoById(Long skuId) {
@@ -117,6 +117,11 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
 
         skuInfo.setIsSale(0);
         return skuInfoMapper.updateById(skuInfo) > 0;
+    }
+
+    @Override
+    public List<SkuSaleAttrJsonValueVo> getSkuIdListAndValue(Long skuId) {
+        return spuSaleAttrMapper.getSpuSaleAttrIdListAndValue(skuId);
     }
 
 }

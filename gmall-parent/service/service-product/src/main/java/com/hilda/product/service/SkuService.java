@@ -7,6 +7,7 @@ import com.hilda.model.bean.product.SkuAttrValue;
 import com.hilda.model.bean.product.SkuImage;
 import com.hilda.model.bean.product.SkuInfo;
 import com.hilda.model.bean.product.SkuSaleAttrValue;
+import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
 import com.hilda.product.mapper.SkuAttrValueMapper;
 import com.hilda.product.mapper.SkuImageMapper;
 import com.hilda.product.mapper.SkuSaleAttrValueMapper;
@@ -51,4 +52,5 @@ public interface SkuService extends IService<SkuInfo> {
         skuInfo.setSkuSaleAttrValueList(skuSaleAttrValueList);
     }
 
+    List<SkuSaleAttrJsonValueVo> getSkuIdListAndValue(Long skuId);
 }
