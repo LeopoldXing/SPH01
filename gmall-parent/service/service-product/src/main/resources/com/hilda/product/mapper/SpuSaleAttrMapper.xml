@@ -14,12 +14,47 @@
     </resultMap>
 
     <select id="getSpuSaleAttrListBySpuId" parameterType="long" resultMap="spuSaleAttrMap">
-        SELECT ssa.id, ssav.id vid, ssa.spu_id, ssa.base_sale_attr_id, ssa.sale_attr_name, ssav.sale_attr_value_name
+        SELECT ssa.id,
+               ssav.id vid,
+               ssa.spu_id,
+               ssa.base_sale_attr_id,
+               ssa.sale_attr_name,
+               ssav.sale_attr_value_name
         FROM spu_sale_attr ssa
         LEFT JOIN spu_sale_attr_value ssav
         ON ssa.base_sale_attr_id = ssav.base_sale_attr_id
         WHERE ssa.spu_id = #{spuId} AND ssav.spu_id = #{spuId}
         ORDER BY vid
+    </select>
+
+    <select id="getSpuSaleAttrListBySpuId_isChecked" resultMap="spuSaleAttrMap">
+        SELECT ssa.id,
+               spusav.id vid,
+               ssa.spu_id,
+               ssa.base_sale_attr_id,
+               ssa.sale_attr_name,
+               spusav.sale_attr_value_name,
+               IF(skusav.sale_attr_value_id IS NULL, "0", "1") is_checked
+        FROM spu_sale_attr ssa
+                 LEFT JOIN spu_sale_attr_value spusav
+                           ON ssa.base_sale_attr_id = spusav.base_sale_attr_id
+                 LEFT JOIN sku_sale_attr_value skusav
+                           ON skusav.sku_id = #{skuId} AND spusav.id = skusav.sale_attr_value_id
+        WHERE ssa.spu_id = #{spuId} AND spusav.spu_id = #{spuId}
+        ORDER BY ssa.base_sale_attr_id, vid
+    </select>
+
+    <select id="getSpuSaleAttrIdListAndValue" resultType="SkuSaleAttrJsonValueVo">
+        SELECT a.sku_id, GROUP_CONCAT(DISTINCT a.sale_attr_value_id ORDER BY a.sale_attr_value_id ASC SEPARATOR '|') jsonValue
+        FROM (SELECT si.id sku_id, skusav.sale_attr_value_id
+              FROM sku_info si
+                       LEFT JOIN sku_sale_attr_value skusav
+                                 ON si.id = skusav.sku_id
+                       LEFT JOIN spu_sale_attr_value spusav
+                                 ON skusav.sale_attr_value_id = spusav.id
+              WHERE si.spu_id in (SELECT spu_id FROM sku_info WHERE id = #{skuId})
+              ORDER BY skusav.sku_id, spusav.base_sale_attr_id, skusav.sale_attr_value_id) a
+        GROUP BY a.sku_id
     </select>
 
 </mapper>

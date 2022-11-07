@@ -24,11 +24,11 @@ public interface ProductFeignClient {
     @GetMapping("/api/product/inner/getSkuPrice/{skuId}")
     BigDecimal getSkuPrice(@PathVariable(value = "skuId") Long skuId);
 
-    @GetMapping("/api/product/inner/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
-    List<SpuSaleAttr> getSpuSaleAttrList(@PathVariable("skuId") Long skuId, @PathVariable("spuId") Long spuId);
+    @GetMapping("/api/product/inner/getSpuSaleAttrList/{spuId}/{skuId}")
+    List<SpuSaleAttr> getSpuSaleAttrList(@PathVariable("spuId") Long spuId, @PathVariable("skuId") Long skuId);
 
-    @GetMapping("/api/product/inner/getSkuValueIdsMap/{spuId}")
-    Map<String, Object> getSkuValueIdsMap(@PathVariable("spuId") Long spuId);
+    @GetMapping("/api/product/inner/getSkuValueIdsMap/{skuId}")
+    Map<String, Object> getSkuValueIdsMap(@PathVariable("skuId") Long skuId);
 
     /**
      * 查询首页分类信息

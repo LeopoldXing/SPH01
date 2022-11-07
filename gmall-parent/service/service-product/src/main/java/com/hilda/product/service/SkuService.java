@@ -7,11 +7,13 @@ import com.hilda.model.bean.product.SkuAttrValue;
 import com.hilda.model.bean.product.SkuImage;
 import com.hilda.model.bean.product.SkuInfo;
 import com.hilda.model.bean.product.SkuSaleAttrValue;
+import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
 import com.hilda.product.mapper.SkuAttrValueMapper;
 import com.hilda.product.mapper.SkuImageMapper;
 import com.hilda.product.mapper.SkuSaleAttrValueMapper;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SkuService extends IService<SkuInfo> {
@@ -25,6 +27,10 @@ public interface SkuService extends IService<SkuInfo> {
     Boolean onSale(Long skuId);
 
     Boolean offSale(Long skuId);
+
+    List<SkuSaleAttrJsonValueVo> getSkuIdListAndValue(Long skuId);
+
+    BigDecimal getSkuPrice(Long skuId);
 
     default void packSkuInfo(Long skuId, SkuInfo skuInfo,
                              SkuImageMapper skuImageMapper,
@@ -50,5 +56,4 @@ public interface SkuService extends IService<SkuInfo> {
         List<SkuSaleAttrValue> skuSaleAttrValueList = skuSaleAttrValueMapper.selectList(queryWrapperSaleAttr);
         skuInfo.setSkuSaleAttrValueList(skuSaleAttrValueList);
     }
-
 }

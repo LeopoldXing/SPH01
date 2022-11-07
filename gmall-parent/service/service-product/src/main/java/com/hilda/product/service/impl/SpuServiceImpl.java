@@ -110,4 +110,11 @@ public class SpuServiceImpl implements SpuService {
         return spuSaleAttrMapper.getSpuSaleAttrListBySpuId(spuId);
     }
 
+    public List<SpuSaleAttr> getSpuSaleAttrListBySpuId_SkuId(Long spuId, Long skuId) {
+        if (spuId == null || spuId <= 0) throw new GmallException("SpuId为空", 100);
+        if (skuId == null || skuId <= 0) throw new GmallException("SkuId为空", 100);
+        List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrMapper.getSpuSaleAttrListBySpuId_isChecked(spuId, skuId);
+        return spuSaleAttrList;
+    }
+
 }
