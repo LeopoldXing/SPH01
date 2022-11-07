@@ -97,7 +97,6 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
                 if (skuImageMapper.insert(skuImage) <= 0) throw new GmallException("SKU 图片信息插入失败", 303);
             }
         }
-
         return true;
     }
 
