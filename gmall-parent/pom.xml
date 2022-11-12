@@ -12,7 +12,6 @@
         <module>model</module>
         <module>service</module>
         <module>server-gateway</module>
-        <module>service-client</module>
         <module>web</module>
     </modules>
 
@@ -71,12 +70,12 @@
         <version>${mysql.version}</version>
     </dependency>
 
-    <!--swagger-->
-    <dependency>
-    <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger2</artifactId>
-        <version>${swagger.version}</version>
-    </dependency>
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
         <!--swagger ui-->
         <dependency>
             <groupId>io.springfox</groupId>

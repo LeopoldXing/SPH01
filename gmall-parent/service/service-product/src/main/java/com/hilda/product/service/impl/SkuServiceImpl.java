@@ -9,6 +9,7 @@ import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
 import com.hilda.product.mapper.*;
 import com.hilda.product.service.SkuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -33,6 +34,9 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
 
     @Autowired
     private SpuSaleAttrMapper spuSaleAttrMapper;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public SkuInfo getSkuInfoById(Long skuId) {

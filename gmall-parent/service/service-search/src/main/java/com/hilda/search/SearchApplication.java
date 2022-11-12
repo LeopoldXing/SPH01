@@ -1,17 +1,15 @@
-package com.hilda.item;
+package com.hilda.search;
 
-import com.hilda.common.config.swagger.annotation.EnableSwagger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+@EnableFeignClients("com.hilda.feign")
 @SpringCloudApplication
-@EnableSwagger
-@EnableFeignClients(basePackages = "com.hilda.feign")
-public class ItemApplication {
+public class SearchApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ItemApplication.class, args);
+        SpringApplication.run(SearchApplication.class, args);
     }
 
 }

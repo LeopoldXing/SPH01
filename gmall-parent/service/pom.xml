@@ -12,6 +12,7 @@
     <modules>
         <module>service-product</module>
         <module>service-item</module>
+        <module>service-search</module>
     </modules>
     <artifactId>service</artifactId>
 
@@ -95,6 +96,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.17.4</version>
         </dependency>
     </dependencies>
 
