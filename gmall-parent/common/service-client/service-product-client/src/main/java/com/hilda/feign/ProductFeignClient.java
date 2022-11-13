@@ -1,8 +1,7 @@
 package com.hilda.feign;
 
-import com.hilda.model.bean.product.BaseCategoryView;
-import com.hilda.model.bean.product.SkuInfo;
-import com.hilda.model.bean.product.SpuSaleAttr;
+import com.hilda.model.bean.product.*;
+import com.hilda.model.bean.search.SearchAttr;
 import com.hilda.model.vo.product.CategoryVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,5 +35,11 @@ public interface ProductFeignClient {
      */
     @GetMapping("/api/product/inner/getBaseCategoryList")
     List<CategoryVo> getCategoryVoList();
+
+    @GetMapping("/getTrademarkById/{trademarkId}")
+    BaseTrademark getTrademarkById(@PathVariable("trademarkId") Long trademarkId);
+
+    @GetMapping("/getSearchAttrList/{skuId}")
+    public List<SearchAttr> getSearchAttrListBySkuId(@PathVariable("skuId") Long skuId);
 
 }
