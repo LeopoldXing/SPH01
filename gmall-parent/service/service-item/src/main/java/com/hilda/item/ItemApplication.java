@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringCloudApplication
 @EnableSwagger
-@EnableFeignClients(basePackages = "com.hilda")
+@EnableFeignClients(basePackages = "com.hilda.feign")
 public class ItemApplication {
 
     public static void main(String[] args) {

@@ -21,9 +21,9 @@ public class AttributeController {
 
     @ApiOperation("根据分类Id 获取平台属性数据")
     @GetMapping("/attrInfoList/{category1Id}/{category2Id}/{category3Id}")
-    public Result<List<BaseAttrInfo>> attrInfoList(@PathVariable("category1Id") Long category1Id,
-                                                   @PathVariable("category2Id") Long category2Id,
-                                                   @PathVariable("category3Id") Long category3Id) {
+    public Result<List<BaseAttrInfo>> getAttrInfoList(@PathVariable("category1Id") Long category1Id,
+                                                      @PathVariable("category2Id") Long category2Id,
+                                                      @PathVariable("category3Id") Long category3Id) {
         List<BaseAttrInfo> attrInfoList = attributeService.getAttrInfoList(category1Id, category2Id, category3Id);
         return Result.ok(attrInfoList);
     }

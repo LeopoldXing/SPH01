@@ -11,3 +11,4 @@ spring:
         file-extension: yml
         shared-configs:
           - data-id: zipkin.yaml
+          - data-id: redis

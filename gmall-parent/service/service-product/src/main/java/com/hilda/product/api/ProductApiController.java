@@ -1,13 +1,11 @@
 package com.hilda.product.api;
 
-import com.hilda.model.bean.product.BaseCategoryView;
-import com.hilda.model.bean.product.SkuInfo;
-import com.hilda.model.bean.product.SpuSaleAttr;
+import com.hilda.common.result.Result;
+import com.hilda.model.bean.product.*;
+import com.hilda.model.bean.search.SearchAttr;
 import com.hilda.model.vo.product.CategoryVo;
 import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
-import com.hilda.product.service.CategoryService;
-import com.hilda.product.service.SkuService;
-import com.hilda.product.service.SpuService;
+import com.hilda.product.service.*;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -28,6 +26,9 @@ import java.util.Map;
 public class ProductApiController {
 
     @Autowired
+    private AttributeService attributeService;
+
+    @Autowired
     private SkuService skuService;
 
     @Autowired
@@ -35,6 +36,9 @@ public class ProductApiController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private TrademarkService trademarkService;
 
     @GetMapping("/getSkuInfo/{skuId}")
     public SkuInfo getSkuInfoById(@PathVariable("skuId") Long skuId){
@@ -67,7 +71,7 @@ public class ProductApiController {
     }
 
     @GetMapping("/getSkuValueIdsMap/{skuId}")
-    Map<String, Object> getSkuValueIdsMap(@PathVariable("skuId") Long skuId){
+    public Map<String, Object> getSkuValueIdsMap(@PathVariable("skuId") Long skuId){
         Map<String, Object> res = new HashMap<>();
 
         List<SkuSaleAttrJsonValueVo> skuSaleAttrJsonValueVoList = skuService.getSkuIdListAndValue(skuId);
@@ -78,6 +82,16 @@ public class ProductApiController {
             }
         }
         return res;
+    }
+
+    @GetMapping("/getTrademarkById/{trademarkId}")
+    public BaseTrademark getTrademarkById(@PathVariable("trademarkId") Long trademarkId) {
+        return trademarkService.getTrademarkById(trademarkId);
+    }
+
+    @GetMapping("/getSearchAttrList/{skuId}")
+    public List<SearchAttr> getSearchAttrListBySkuId(@PathVariable("skuId") Long skuId) {
+        return attributeService.getSearchAttrList(skuId);
     }
 
 }

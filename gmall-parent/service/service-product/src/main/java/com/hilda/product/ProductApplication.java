@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringCloudApplication
 @EnableSwagger
 @EnableMinio
-@EnableFeignClients(basePackages = "com.hilda")
+@EnableFeignClients(basePackages = "com.hilda.feign")
 @EnableTransactionManagement
 @MapperScan(basePackages = "com.hilda.product.mapper")
 public class ProductApplication {

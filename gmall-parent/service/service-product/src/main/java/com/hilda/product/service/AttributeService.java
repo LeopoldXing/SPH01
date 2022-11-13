@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hilda.common.execption.GmallException;
 import com.hilda.model.bean.product.BaseAttrInfo;
 import com.hilda.model.bean.product.BaseAttrValue;
+import com.hilda.model.bean.search.SearchAttr;
 import com.hilda.product.mapper.BaseAttrValueMapper;
 
 import java.util.List;
@@ -45,4 +46,7 @@ public interface AttributeService {
         queryWrapper.eq(BaseAttrValue::getAttrId, attr_id);
         baseAttrInfo.setAttrValueList(baseAttrValueMapper.selectList(queryWrapper));
     }
+
+    List<SearchAttr> getSearchAttrList(Long skuId);
+
 }

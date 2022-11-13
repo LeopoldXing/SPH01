@@ -1,0 +1,8 @@
+server:
+  port: 8205
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  elasticsearch:
+    rest:
+      uris: http://110.40.190.216:9200

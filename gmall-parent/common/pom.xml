@@ -16,6 +16,7 @@
         <module>common-util</module>
         <module>service-util</module>
         <module>web-util</module>
+        <module>service-client</module>
     </modules>
 
     <properties>
@@ -24,10 +25,11 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
 
         <!--lombok用来简化实体类：需要安装lombok插件-->
@@ -57,7 +59,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <scope>provided </scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

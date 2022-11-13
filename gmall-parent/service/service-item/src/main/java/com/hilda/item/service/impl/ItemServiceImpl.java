@@ -7,7 +7,7 @@ import com.hilda.model.bean.product.BaseCategoryView;
 import com.hilda.model.bean.product.SkuInfo;
 import com.hilda.model.bean.product.SpuSaleAttr;
 import com.hilda.model.vo.item.SkuDetailVo;
-import com.hilda.product_feign_client.ProductFeignClient;
+import com.hilda.feign.ProductFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
