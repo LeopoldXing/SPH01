@@ -2,6 +2,7 @@ package com.hilda.product.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hilda.model.bean.product.BaseAttrInfo;
+import com.hilda.model.bean.search.SearchAttr;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,5 @@ public interface BaseAttrInfoMapper extends BaseMapper<BaseAttrInfo> {
                                                          @Param("category2Id") Long category2Id,
                                                          @Param("category3Id") Long category3Id);
 
+    List<SearchAttr> getSearchAttrList(@Param("skuId") Long skuId);
 }

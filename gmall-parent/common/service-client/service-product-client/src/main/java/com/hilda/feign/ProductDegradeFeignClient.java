@@ -1,8 +1,7 @@
 package com.hilda.feign;
 
-import com.hilda.model.bean.product.BaseCategoryView;
-import com.hilda.model.bean.product.SkuInfo;
-import com.hilda.model.bean.product.SpuSaleAttr;
+import com.hilda.model.bean.product.*;
+import com.hilda.model.bean.search.SearchAttr;
 import com.hilda.model.vo.product.CategoryVo;
 import org.springframework.stereotype.Component;
 
@@ -43,5 +42,14 @@ public class ProductDegradeFeignClient implements ProductFeignClient {
         return null;
     }
 
-}
+    @Override
+    public BaseTrademark getTrademarkById(Long trademarkId) {
+        return null;
+    }
 
+    @Override
+    public List<SearchAttr> getSearchAttrListBySkuId(Long skuId) {
+        return null;
+    }
+
+}

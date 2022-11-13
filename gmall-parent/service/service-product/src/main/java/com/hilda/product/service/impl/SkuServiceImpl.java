@@ -4,10 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hilda.common.execption.GmallException;
+import com.hilda.feign.ProductFeignClient;
+import com.hilda.feign.SearchFeignClient;
 import com.hilda.model.bean.product.*;
+import com.hilda.model.bean.search.Goods;
 import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
 import com.hilda.product.mapper.*;
+import com.hilda.product.service.AttributeService;
+import com.hilda.product.service.CategoryService;
 import com.hilda.product.service.SkuService;
+import com.hilda.product.service.TrademarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -37,6 +43,18 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private SearchFeignClient searchFeignClient;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private AttributeService attributeService;
+
+    @Autowired
+    private TrademarkService trademarkService;
 
     @Override
     public SkuInfo getSkuInfoById(Long skuId) {
@@ -111,6 +129,12 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
         if (ObjectUtils.isEmpty(skuInfo)) throw new GmallException("指定 SKU 不存在", 500);
 
+        // 将 SKU 对象转换为商品对象
+        Goods goods = this.skuInfo2Goods(skuInfo, categoryService, attributeService, trademarkService);
+
+        // elasticsearch上架商品
+        searchFeignClient.goodsOnSale(goods);
+
         skuInfo.setIsSale(1);
         return skuInfoMapper.updateById(skuInfo) > 0;
     }
@@ -120,6 +144,9 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
         if (skuId == null || skuId <= 0) return false;
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
         if (ObjectUtils.isEmpty(skuInfo)) throw new GmallException("指定 SKU 不存在", 500);
+
+        // elasticsearch下架商品
+        searchFeignClient.goodsOffSale(skuId);
 
         skuInfo.setIsSale(0);
         return skuInfoMapper.updateById(skuInfo) > 0;
