@@ -23,7 +23,7 @@ public class SearchController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("list/index");
 
-        SearchResponseVo searchResponseVo = /*searchFeignClient.searchGoodsByConditions(searchParamVo).getData()*/new SearchResponseVo();
+        SearchResponseVo searchResponseVo = searchFeignClient.searchGoodsByConditions(searchParamVo).getData()/*new SearchResponseVo()*/;
 
         modelAndView.addObject("searchParam", searchParamVo);
         modelAndView.addObject("trademarkParam", searchResponseVo.getTrademarkParam());

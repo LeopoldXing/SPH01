@@ -23,8 +23,6 @@ public class SearchApiController {
     public Result<SearchResponseVo> searchGoodsByConditions(@RequestBody SearchParamVo searchParamVo) {
         SearchResponseVo searchResponseVo = searchService.searchGoodsByConditions(searchParamVo);
 
-        /*QueryBuilder queryBuilder = new QueryBuilder();*/
-
         return Result.ok(searchResponseVo);
     }
 
