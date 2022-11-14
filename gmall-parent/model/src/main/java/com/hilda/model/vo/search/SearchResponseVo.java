@@ -1,4 +1,4 @@
-package com.hilda.model.vo.list;
+package com.hilda.model.vo.search;
 
 import com.hilda.model.bean.search.Goods;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class SearchResponseVo implements Serializable {
     private SearchParamVo searchParamVo;
     private String trademarkParam;
     private List<AttrVo> propsParamList;
-    private List<String> trademarkList;
+    private List<TrademarkVo> trademarkList;
     private List<AttrListVo> attrsList;
     private List<Goods> goodsList;
     private OrderMapVo orderMap;

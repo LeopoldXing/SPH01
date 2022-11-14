@@ -1,4 +1,4 @@
-package com.hilda.model.vo.list;
+package com.hilda.model.vo.search;
 
 import com.hilda.model.bean.base.BaseEntity;
 

@@ -2,8 +2,8 @@ package com.hilda.search.api;
 
 import com.hilda.common.result.Result;
 import com.hilda.model.bean.search.Goods;
-import com.hilda.model.vo.list.SearchParamVo;
-import com.hilda.model.vo.list.SearchResponseVo;
+import com.hilda.model.vo.search.SearchParamVo;
+import com.hilda.model.vo.search.SearchResponseVo;
 import com.hilda.search.service.GoodService;
 import com.hilda.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,6 @@ public class SearchApiController {
     @PostMapping("/goods")
     public Result<SearchResponseVo> searchGoodsByConditions(@RequestBody SearchParamVo searchParamVo) {
         SearchResponseVo searchResponseVo = searchService.searchGoodsByConditions(searchParamVo);
-
-        /*QueryBuilder queryBuilder = new QueryBuilder();*/
 
         return Result.ok(searchResponseVo);
     }
