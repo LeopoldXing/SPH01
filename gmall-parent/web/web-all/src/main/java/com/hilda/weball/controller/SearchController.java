@@ -1,8 +1,8 @@
 package com.hilda.weball.controller;
 
 import com.hilda.feign.SearchFeignClient;
-import com.hilda.model.vo.list.SearchParamVo;
-import com.hilda.model.vo.list.SearchResponseVo;
+import com.hilda.model.vo.search.SearchParamVo;
+import com.hilda.model.vo.search.SearchResponseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,10 @@ public class SearchController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("list/index");
 
+        // 获取搜索结果
         SearchResponseVo searchResponseVo = searchFeignClient.searchGoodsByConditions(searchParamVo).getData()/*new SearchResponseVo()*/;
 
+        // 返回参数
         modelAndView.addObject("searchParam", searchParamVo);
         modelAndView.addObject("trademarkParam", searchResponseVo.getTrademarkParam());
         modelAndView.addObject("trademarkList", searchResponseVo.getTrademarkList());

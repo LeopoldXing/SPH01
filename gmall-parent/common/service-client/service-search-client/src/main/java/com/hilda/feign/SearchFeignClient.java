@@ -2,8 +2,8 @@ package com.hilda.feign;
 
 import com.hilda.common.result.Result;
 import com.hilda.model.bean.search.Goods;
-import com.hilda.model.vo.list.SearchParamVo;
-import com.hilda.model.vo.list.SearchResponseVo;
+import com.hilda.model.vo.search.SearchParamVo;
+import com.hilda.model.vo.search.SearchResponseVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

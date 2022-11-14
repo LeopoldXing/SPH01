@@ -1,8 +1,8 @@
 package com.hilda.search.service.impl;
 
 import com.hilda.model.bean.search.Goods;
-import com.hilda.model.vo.list.SearchParamVo;
-import com.hilda.model.vo.list.SearchResponseVo;
+import com.hilda.model.vo.search.SearchParamVo;
+import com.hilda.model.vo.search.SearchResponseVo;
 import com.hilda.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -19,11 +19,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResponseVo searchGoodsByConditions(SearchParamVo searchParamVo) {
-        searchParamVo = new SearchParamVo();
-        searchParamVo.setCategory3Id(61L);
-        searchParamVo.setTrademark("2:华为");
-        searchParamVo.setProps(new String[]{"4:256GB:机身存储", "3:8GB:运行内存"});
-        searchParamVo.setPageNo(1);
 
         //TODO 构建 DSL
         Query query = this.buildQueryDSL(searchParamVo);

@@ -20,6 +20,10 @@ spring:
           uri: lb://web-all
           predicates:
             - Host=**.gmall.com,gmall.com
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/*/user/**
       globalcors:
         cors-configurations:
           '[/**]':
