@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hilda.common.execption.GmallException;
-import com.hilda.feign.ProductFeignClient;
 import com.hilda.model.bean.product.*;
 import com.hilda.model.bean.search.Goods;
 import com.hilda.model.bean.search.SearchAttr;
@@ -24,6 +23,8 @@ public interface SkuService extends IService<SkuInfo> {
 
     Page<SkuInfo> getSkuInfoInPages(Integer current, Integer size);
 
+    List<Long> getSkuIdList();
+
     Boolean addSkuInfo(SkuInfo skuInfo);
 
     Boolean onSale(Long skuId);
@@ -33,6 +34,8 @@ public interface SkuService extends IService<SkuInfo> {
     List<SkuSaleAttrJsonValueVo> getSkuIdListAndValue(Long skuId);
 
     BigDecimal getSkuPrice(Long skuId);
+
+    void initBitmap();
 
     default void packSkuInfo(Long skuId, SkuInfo skuInfo,
                              SkuImageMapper skuImageMapper,

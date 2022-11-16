@@ -2,6 +2,7 @@ package com.hilda.item.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hilda.common.execption.GmallException;
+import com.hilda.item.service.CacheService;
 import com.hilda.item.service.ItemService;
 import com.hilda.model.bean.product.BaseCategoryView;
 import com.hilda.model.bean.product.SkuInfo;
@@ -21,8 +22,34 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ProductFeignClient productFeignClient;
 
+    @Autowired
+    private CacheService cacheService;
+
     @Override
     public SkuDetailVo getSkuDetailBySkuId(Long skuId) {
+        // 从 Redis 缓存中取出数据
+        SkuDetailVo skuDetailVo = cacheService.getSkuDetailVoFromCache(skuId);
+        if (!ObjectUtils.isEmpty(skuDetailVo)) {
+            // 缓存命中
+            return skuDetailVo;
+        } else {
+            // 缓存未命中
+            // 1. 根据位图判断是否存在
+            Boolean bitmapRes = cacheService.checkSkuDetailVoExistenceByBitmap(skuId);
+            if (bitmapRes) {
+                // 存在
+                // 查询skuDetailVo
+                SkuDetailVo detailVo = getSkuDetailVo(skuId);
+                // 将查询结果存入缓存
+                cacheService.saveSkuDetailVoCache(detailVo);
+                return detailVo;
+            }
+        }
+        // 缓存未命中，位图查询也没有
+        return null;
+    }
+
+    private SkuDetailVo getSkuDetailVo(Long skuId) {
         SkuDetailVo res = new SkuDetailVo();
 
         //TODO 根据 skuId 查询 SkuInfo

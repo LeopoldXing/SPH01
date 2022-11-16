@@ -3,9 +3,11 @@ package com.hilda.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hilda.common.constant.RedisConst;
 import com.hilda.common.execption.GmallException;
 import com.hilda.feign.ProductFeignClient;
 import com.hilda.feign.SearchFeignClient;
+import com.hilda.model.bean.base.BaseEntity;
 import com.hilda.model.bean.product.*;
 import com.hilda.model.bean.search.Goods;
 import com.hilda.model.vo.product.SkuSaleAttrJsonValueVo;
@@ -14,15 +16,20 @@ import com.hilda.product.service.AttributeService;
 import com.hilda.product.service.CategoryService;
 import com.hilda.product.service.SkuService;
 import com.hilda.product.service.TrademarkService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implements SkuService {
 
@@ -80,6 +87,22 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
     }
 
     @Override
+    public List<Long> getSkuIdList() {
+        List<Long> skuIdList = new ArrayList<>();
+        LambdaQueryWrapper<SkuInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SkuInfo::getId);
+        List<SkuInfo> skuInfoList = skuInfoMapper.selectList(queryWrapper);
+        if (!ObjectUtils.isEmpty(skuInfoList)) {
+            skuIdList = skuInfoList
+                    .parallelStream()
+                    .map(BaseEntity::getId)
+                    .collect(Collectors.toList());
+        }
+
+        return skuIdList;
+    }
+
+    @Override
     @Transactional
     public Boolean addSkuInfo(SkuInfo skuInfo) {
         if (ObjectUtils.isEmpty(skuInfo)) return false;
@@ -119,6 +142,10 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
                 if (skuImageMapper.insert(skuImage) <= 0) throw new GmallException("SKU 图片信息插入失败", 303);
             }
         }
+
+        // 5. 位图更新
+        String skuKey = RedisConst.SKUKEY_PREFIX + RedisConst.SKUKEY_SUFFIX + skuInfoId;
+        redisTemplate.opsForValue().setBit(skuKey, skuInfoId, true);
 
         return true;
     }
@@ -163,6 +190,17 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
         queryWrapper.eq(SkuInfo::getId, skuId).select(SkuInfo::getPrice);
         SkuInfo skuInfo = skuInfoMapper.selectOne(queryWrapper);
         return skuInfo.getPrice();
+    }
+
+    @Override
+    @PostConstruct
+    public void initBitmap() {
+        List<Long> skuIdList = this.getSkuIdList();
+        skuIdList.parallelStream().forEach(skuId -> {
+            redisTemplate.opsForValue()
+                    .setBit(RedisConst.SKUKEY_PREFIX + RedisConst.SKUKEY_SUFFIX + skuId, skuId, true);
+        });
+        System.out.println("位图初始化完成");
     }
 
 }
