@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class CacheServiceImpl implements CacheService {
 
@@ -43,7 +45,7 @@ public class CacheServiceImpl implements CacheService {
             // 将skuInfo存入缓存
             Long skuId = skuDetailVo.getSkuInfo().getId();
             String skuKey = this.getSkuKeyById(skuId);
-            stringRedisTemplate.opsForValue().set(skuKey, JSON.toJSONString(skuDetailVo));
+            stringRedisTemplate.opsForValue().set(skuKey, JSON.toJSONString(skuDetailVo), 60*5, TimeUnit.SECONDS);
 
 /*            //更新 bitmap
             stringRedisTemplate.opsForValue().setBit(skuKey, skuId, true);*/

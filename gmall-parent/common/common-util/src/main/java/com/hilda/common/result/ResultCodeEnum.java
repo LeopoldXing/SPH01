@@ -13,6 +13,8 @@ public enum ResultCodeEnum {
     FAIL(201, "失败"),
     SERVICE_ERROR(2012, "服务异常"),
 
+    INVALID_PASSWORD_OR_ACCOUNT(5001, "账号或密码错误"),
+
     PAY_RUN(205, "支付中"),
 
     LOGIN_AUTH(208, "未登陆"),
