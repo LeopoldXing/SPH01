@@ -1,6 +1,5 @@
 package com.hilda.product.service.impl;
 
-import com.hilda.common.config.minio.annotation.EnableMinio;
 import com.hilda.common.config.minio.properties.MinioProperties;
 import com.hilda.product.service.FileService;
 import io.minio.BucketExistsArgs;
