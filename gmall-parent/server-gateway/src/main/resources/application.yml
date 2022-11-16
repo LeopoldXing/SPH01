@@ -32,3 +32,12 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true # Cookie
+url:
+  pattern:
+    direct-pass-url:
+      - /css/**
+      - /js/**
+      - /img/**
+      - /fonts/**
+    inner-url:
+      -
