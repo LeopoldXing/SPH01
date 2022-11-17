@@ -11,7 +11,11 @@ import java.util.List;
 @ConfigurationProperties(prefix = "url.pattern")
 public class AuthUrlProperties {
 
+    String loginPage;
+
     List<String> directPassUrl;
+
+    List<String> requiredAuthUrl;
 
     List<String> innerUrl;
 

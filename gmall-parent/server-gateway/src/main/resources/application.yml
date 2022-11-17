@@ -39,5 +39,8 @@ url:
       - /js/**
       - /img/**
       - /fonts/**
+    required-auth-url:
+      - /**/order/**
     inner-url:
       - /**/inner/**
+    login-page: http://passport.gmall.com/login.html
