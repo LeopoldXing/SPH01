@@ -196,10 +196,9 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
     @PostConstruct
     public void initBitmap() {
         List<Long> skuIdList = this.getSkuIdList();
-        skuIdList.parallelStream().forEach(skuId -> {
-            redisTemplate.opsForValue()
-                    .setBit(RedisConst.SKUKEY_PREFIX + RedisConst.SKUKEY_SUFFIX + skuId, skuId, true);
-        });
+        skuIdList.parallelStream()
+                .forEach(skuId -> redisTemplate.opsForValue()
+                        .setBit(RedisConst.SKUKEY_PREFIX + RedisConst.SKUKEY_SUFFIX + skuId, skuId, true));
         System.out.println("位图初始化完成");
     }
 
