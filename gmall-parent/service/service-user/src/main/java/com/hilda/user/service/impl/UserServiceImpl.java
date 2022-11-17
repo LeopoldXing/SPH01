@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private StringRedisTemplate redisTemplate;
 
     @Override
-    public LoginResponseVo login(LoginVo loginVo) {
+    public LoginResponseVo login(LoginVo loginVo, String ip) {
         LoginResponseVo res = null;
         // 从 loginVo 中取出数据
         String loginName = loginVo.getLoginName();
@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
         //TODO 登录
         if (!ObjectUtils.isEmpty(userInfo)) {
+            userInfo.setLoginIp(ip);
             res = new LoginResponseVo();
             Long userId = userInfo.getId();
 
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
             res.setToken(token);
 
             //将 用户信息 和 token共享到redis中
-            String userInfoKey = RedisConst.USERKEY_PREFIX + RedisConst.USERKEY_SUFFIX + userId;
+            String userInfoKey = RedisConst.USERKEY_PREFIX + RedisConst.USERKEY_SUFFIX + token;
             redisTemplate.opsForValue().set(userInfoKey, JSON.toJSONString(userInfo), RedisConst.USER_LOGIN_TTL, TimeUnit.SECONDS);
 
         } else {

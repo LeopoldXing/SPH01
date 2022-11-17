@@ -1,5 +1,10 @@
 package com.hilda.common.constant;
 
+import org.springframework.http.HttpHeaders;
+
+import java.rmi.server.UID;
+import java.util.function.Consumer;
+
 /**
  * Redis常量配置类
  *
@@ -15,4 +20,5 @@ public class RedisConst {
     //单位：秒
     public static final long SKUKEY_TIMEOUT = 24 * 60 * 60;
 
+    public static final String UID = "uid";
 }
