@@ -108,9 +108,27 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
             }
         }
 
-        Mono<Void> filterMono = chain.filter(exchange);
+        return userIdPenetration(exchange, chain, userInfo);
+    }
 
-        return filterMono;
+    /**
+     * 用户id穿透
+     * @param exchange
+     * @param chain
+     * @param userInfo
+     * @return
+     */
+    private Mono<Void> userIdPenetration(ServerWebExchange exchange, GatewayFilterChain chain, UserInfo userInfo) {
+        // 如果用户信息为空则直接放行
+        if (ObjectUtils.isEmpty(userInfo)) return chain.filter(exchange);
+
+        // 用户id透传
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+        ServerHttpRequest newRequest = request.mutate().header(RedisConst.UID, String.valueOf(userInfo.getId())).build();
+        ServerWebExchange newExchange = exchange.mutate().request(newRequest).response(response).build();
+
+        return chain.filter(newExchange);
     }
 
     private Mono<Void> redirectPage(ServerWebExchange exchange, String uri) {
