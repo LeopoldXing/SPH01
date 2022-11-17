@@ -45,4 +45,8 @@ public class UserInfo extends BaseEntity {
     @TableField("user_level")
     private String userLevel;
 
+    @ApiModelProperty(value = "用户登录ip")
+    @TableField(exist = false)
+    private String loginIp;
+
 }

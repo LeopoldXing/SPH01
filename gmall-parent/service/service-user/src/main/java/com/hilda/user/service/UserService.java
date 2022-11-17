@@ -5,7 +5,7 @@ import com.hilda.model.vo.user.LoginVo;
 
 public interface UserService {
 
-    LoginResponseVo login(LoginVo loginVo);
+    LoginResponseVo login(LoginVo loginVo, String ip);
 
     Boolean logout(String token);
 
