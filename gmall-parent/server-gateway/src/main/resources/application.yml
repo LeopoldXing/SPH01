@@ -40,4 +40,4 @@ url:
       - /img/**
       - /fonts/**
     inner-url:
-      -
+      - /**/inner/**
