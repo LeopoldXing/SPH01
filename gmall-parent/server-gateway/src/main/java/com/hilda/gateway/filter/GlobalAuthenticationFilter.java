@@ -24,6 +24,9 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -119,12 +122,27 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
      * @return
      */
     private Mono<Void> userIdPenetration(ServerWebExchange exchange, GatewayFilterChain chain, UserInfo userInfo) {
-        // 如果用户信息为空则直接放行
-        if (ObjectUtils.isEmpty(userInfo)) return chain.filter(exchange);
-
-        // 用户id透传
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
+
+        // 如果用户信息为空则查询临时id后放行
+        String tempUID = "";
+        if (ObjectUtils.isEmpty(userInfo)) {
+            MultiValueMap<String, HttpCookie> cookies = request.getCookies();
+            if (!ObjectUtils.isEmpty(cookies)) {
+                HttpCookie tempUIDCookie = cookies.getFirst(RedisConst.TEMP_UID);
+                if (!ObjectUtils.isEmpty(tempUIDCookie)) tempUID = tempUIDCookie.getValue();
+            }
+            if (!StringUtils.isEmpty(tempUID)) {
+                ServerHttpRequest tempNewRequest = request.mutate().header(RedisConst.TEMP_UID, tempUID).build();
+                ServerWebExchange newExchange = exchange.mutate().request(tempNewRequest).response(response).build();
+
+                return chain.filter(newExchange);
+            }
+            return chain.filter(exchange);
+        }
+
+        // 用户id透传
         ServerHttpRequest newRequest = request.mutate().header(RedisConst.UID, String.valueOf(userInfo.getId())).build();
         ServerWebExchange newExchange = exchange.mutate().request(newRequest).response(response).build();
 
@@ -177,13 +195,14 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     // 拿到请求中的token
     private String getTokenFromRequest(ServerWebExchange exchange) {
+        String res = "";
         ServerHttpRequest request = exchange.getRequest();
         MultiValueMap<String, HttpCookie> cookies = request.getCookies();
         if (!ObjectUtils.isEmpty(cookies)) {
-            HttpCookie token = cookies.getFirst("token");
-            String value = token.getValue();
-            if (!StringUtils.isEmpty(value)) {
-                return value;
+            HttpCookie tokenCookie = cookies.getFirst("token");
+            if (!ObjectUtils.isEmpty(tokenCookie)) res = tokenCookie.getValue();
+            if (!StringUtils.isEmpty(res)) {
+                return res;
             }
         }
 
