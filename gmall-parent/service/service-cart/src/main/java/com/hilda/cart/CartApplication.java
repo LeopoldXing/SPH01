@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@EnableFeignClients(basePackages = "com.hilda.cart")
+@EnableFeignClients(basePackages = "com.hilda.feign")
 @SpringCloudApplication
 public class CartApplication {
 
