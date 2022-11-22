@@ -25,7 +25,8 @@ public class RequestUtil {
         Long uid = 0L;
         HttpServletRequest request = RequestUtil.getRequest();
         if (!ObjectUtils.isEmpty(request)) {
-            uid = Long.parseLong(request.getHeader(RedisConst.UID));
+            String header = request.getHeader(RedisConst.UID);
+            if (!StringUtils.isEmpty(header)) uid = Long.parseLong(header);
         }
 
         return uid;

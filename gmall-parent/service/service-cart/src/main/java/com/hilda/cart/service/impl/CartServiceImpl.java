@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 
 import com.hilda.cart.mapper.CartInfoMapper;
 import com.hilda.cart.service.CartService;
+import com.hilda.common.constant.RedisConst;
 import com.hilda.common.util.RequestUtil;
 import com.hilda.feign.ProductFeignClient;
 import com.hilda.model.bean.product.SkuInfo;
@@ -30,6 +31,38 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductFeignClient productFeignClient;
+
+    @Override
+    public List<CartInfo> getCartItemList() {
+        Boolean temp = RequestUtil.isTemp();
+        if(!temp) {
+            // 当前是登录状态
+            String tempUID = RequestUtil.getTempUID();
+            if (!StringUtils.isEmpty(tempUID)) {
+                String tempKey = RedisConst.CARTKEY_PREFIX + RedisConst.CARTKEY_SUFFIX + tempUID;
+                List<Object> tempItemList = redisTemplate.opsForHash().values(tempKey);
+                if (!CollectionUtils.isEmpty(tempItemList)) {
+                    // 临时购物车中有东西
+                    tempItemList.parallelStream().forEach(item -> {
+                        if (!ObjectUtils.isEmpty(item)) {
+                            String cartInfoJSON = String.valueOf(item);
+                            CartInfo cartInfo = JSON.parseObject(cartInfoJSON, CartInfo.class);
+                            this.addCartItem(cartInfo.getSkuId(), cartInfo.getSkuNum());
+                        }
+                    });
+                    // 删除临时购物车中的商品
+                    redisTemplate.delete(tempKey);
+                }
+            }
+        }
+
+        List<Object> values = redisTemplate.opsForHash().values(this.generateCartKey());
+        List<CartInfo> cartInfoList = values.parallelStream().map(value -> JSON.parseObject(String.valueOf(value), CartInfo.class))
+                .sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()))
+                .collect(Collectors.toList());
+
+        return cartInfoList;
+    }
 
     @Override
     public Boolean addCartItem(Long skuId, Integer skuNum) {
@@ -84,16 +117,6 @@ public class CartServiceImpl implements CartService {
         }
 
         return res;
-    }
-
-    @Override
-    public List<CartInfo> getCartItemList() {
-        List<Object> values = redisTemplate.opsForHash().values(this.generateCartKey());
-        List<CartInfo> cartInfoList = values.parallelStream().map(value -> JSON.parseObject(String.valueOf(value), CartInfo.class))
-                .sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()))
-                .collect(Collectors.toList());
-
-        return cartInfoList;
     }
 
     @Override
