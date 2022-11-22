@@ -17,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Boolean addCartItem(Long skuId, Integer skuNum) {
+        // 购物车数量验证
+        boolean authenticateCartNum = this.authenticateCartNum(redisTemplate);
+        if (!authenticateCartNum) return false;
+
         boolean res = false;
         Long uid = RequestUtil.getUID();
         String tempUID = RequestUtil.getTempUID();
@@ -112,10 +117,13 @@ public class CartServiceImpl implements CartService {
             }
 
             redisTemplate.opsForHash().put(cartKey, String.valueOf(skuId), JSON.toJSONString(cartInfo));
-
             res = cartInfoMapper.insert(cartInfo) > 0;
         }
 
+        if(!RequestUtil.isTemp()) {
+            Long expire = redisTemplate.getExpire(cartKey);
+            if(expire < 0L) redisTemplate.expire(cartKey, Duration.ofDays(365));
+        }
         return res;
     }
 
