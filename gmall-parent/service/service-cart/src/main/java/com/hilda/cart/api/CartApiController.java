@@ -1,17 +1,13 @@
 package com.hilda.cart.api;
 
 import com.hilda.cart.service.CartService;
-import com.hilda.common.constant.RedisConst;
 import com.hilda.common.result.Result;
-import com.hilda.model.vo.cart.CartInfo;
+import com.hilda.feign.ProductFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart/inner")
@@ -20,15 +16,20 @@ public class CartApiController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/getCartItem")
-    public Result<List<CartInfo>> getCartItem(HttpServletRequest request) {
-        List<CartInfo> cartItemList = new ArrayList<>();
-        cartItemList.add(new CartInfo());
+    @Autowired
+    private ProductFeignClient productFeignClient;
 
-        String tempUID = request.getHeader(RedisConst.TEMP_UID);
-        String uid = request.getHeader(RedisConst.UID);
+    @GetMapping("/add/{skuId}")
+    public Result<Map<String, Object>> addCartItem(@PathVariable("skuId") Long skuId, @RequestParam Integer skuNum) {
+        Boolean addResult = cartService.addCartItem(skuId, skuNum);
 
-        return Result.ok(cartItemList);
+        if(addResult) {
+            Map<String, Object> res = new HashMap<>();
+            res.put("skuInfo", productFeignClient.getSkuInfoById(skuId));
+            res.put("skuNum", skuNum);
+            return Result.ok(res);
+        }
+        return Result.fail();
     }
 
 }
