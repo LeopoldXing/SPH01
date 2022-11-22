@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 
 import com.hilda.cart.mapper.CartInfoMapper;
 import com.hilda.cart.service.CartService;
-import com.hilda.common.constant.RedisConst;
 import com.hilda.common.util.RequestUtil;
 import com.hilda.feign.ProductFeignClient;
 import com.hilda.model.bean.product.SkuInfo;
@@ -12,6 +11,7 @@ import com.hilda.model.vo.cart.CartInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -87,12 +87,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartInfo> getCartItem(String id) {
-        if (StringUtils.isEmpty(id)) return null;
-
-        String cartKey = RedisConst.CARTKEY_PREFIX + RedisConst.CARTKEY_SUFFIX + id;
-
-        List<Object> values = redisTemplate.opsForHash().values(cartKey);
+    public List<CartInfo> getCartItemList() {
+        List<Object> values = redisTemplate.opsForHash().values(this.generateCartKey());
         List<CartInfo> cartInfoList = values.parallelStream().map(value -> JSON.parseObject(String.valueOf(value), CartInfo.class))
                 .sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()))
                 .collect(Collectors.toList());
@@ -124,6 +120,20 @@ public class CartServiceImpl implements CartService {
         String cartKey = this.generateCartKey();
 
         redisTemplate.opsForHash().delete(cartKey, String.valueOf(skuId));
+
+        return true;
+    }
+
+    @Override
+    public Boolean deleteCheckedItems() {
+        List<CartInfo> cartItemList = this.getCartItemList();
+
+        List<String> checkedItemSkuIdList = cartItemList.parallelStream().filter(cartInfo -> cartInfo.getIsChecked() == 1)
+                .map(cartInfo -> String.valueOf(cartInfo.getSkuId()))
+                .collect(Collectors.toList());
+
+        if (!CollectionUtils.isEmpty(checkedItemSkuIdList))
+            redisTemplate.opsForHash().delete(generateCartKey(), checkedItemSkuIdList.toArray());
 
         return true;
     }

@@ -10,7 +10,7 @@ public interface CartService {
 
     Boolean addCartItem(Long skuId, Integer num);
 
-    List<CartInfo> getCartItem(String uid);
+    List<CartInfo> getCartItemList();
 
     Boolean checkItem(Long skuId, Integer isChecked);
 
@@ -21,4 +21,5 @@ public interface CartService {
         return res + (RequestUtil.isTemp() ? RequestUtil.getTempUID() : RequestUtil.getUID());
     }
 
+    Boolean deleteCheckedItems();
 }

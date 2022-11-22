@@ -3,10 +3,7 @@ package com.hilda.feign;
 import com.hilda.common.result.Result;
 import com.hilda.model.vo.cart.CartInfo;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +18,6 @@ public interface CartFeignClient {
     @GetMapping("/getCartItem")
     Result<List<CartInfo>> getCartItem();
 
+    @DeleteMapping("/deleteChecked")
+    Result deleteCheckedItem();
 }

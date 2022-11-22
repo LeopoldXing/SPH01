@@ -22,12 +22,6 @@ public class CartController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("cart/index");
 
-/*        Result<List<CartInfo>> result = cartFeignClient.getCartItem();
-        if (!ObjectUtils.isEmpty(result)) {
-            List<CartInfo> cartInfoList = result.getData();
-            modelAndView.addObject("item", cartInfoList);
-        }*/
-
         return modelAndView;
     }
 
@@ -45,6 +39,16 @@ public class CartController {
                 modelAndView.addObject("skuNum", map.get("skuNum"));
             }
         }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/cart/deleteChecked")
+    public ModelAndView deleteCartItem() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:http://cart.gmall.com/cart.html");
+
+        cartFeignClient.deleteCheckedItem();
 
         return modelAndView;
     }

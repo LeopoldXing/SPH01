@@ -32,4 +32,11 @@ public class CartApiController {
         return Result.fail();
     }
 
+    @DeleteMapping("/deleteChecked")
+    public Result deleteCheckedItem() {
+        Boolean res = cartService.deleteCheckedItems();
+
+        return res ? Result.ok() : Result.fail();
+    }
+
 }

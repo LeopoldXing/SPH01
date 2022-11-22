@@ -2,7 +2,6 @@ package com.hilda.cart.controller;
 
 import com.hilda.cart.service.CartService;
 import com.hilda.common.result.Result;
-import com.hilda.common.util.RequestUtil;
 import com.hilda.model.vo.cart.CartInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +17,7 @@ public class CartController {
 
     @GetMapping("/cartList")
     public Result getCartItemList() {
-        String tempUID = "";
-        Long uid = 0L;
-        boolean isTemp = RequestUtil.isTemp();
-        if (isTemp) tempUID = RequestUtil.getTempUID();
-        else uid = RequestUtil.getUID();
-
-        List<CartInfo> res = cartService.getCartItem(isTemp ? tempUID : String.valueOf(uid));
+        List<CartInfo> res = cartService.getCartItemList();
         return Result.ok(res);
     }
 
