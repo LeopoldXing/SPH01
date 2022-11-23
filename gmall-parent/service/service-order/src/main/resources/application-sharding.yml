@@ -1,0 +1,79 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: master-00,master-01
+      master-00:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://110.40.190.216:3306/gmall_order_00?useSSL=false
+        username: root
+        password: 1759714344x
+        driver-class-name: com.mysql.jdbc.Driver
+      master-01:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://110.40.190.216:3306/gmall_order_01?useSSL=false
+        username: root
+        password: 1759714344x
+        driver-class-name: com.mysql.jdbc.Driver
+    rules:
+      sharding:
+        default-database-strategy:
+          standard:
+            sharding-column: user_id
+            sharding-algorithm-name: orderdb_algorithm
+        binding-tables:
+          - order_info,order_detail
+        tables:
+          order_info:
+            actual-data-nodes: master-0$->{0..1}.order_info_0$->{0..2}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_info_sharding_algorithm
+            key-generate-strategy:
+              column: id
+              key-generator-name: order-id-generator
+          order_detail:
+            actual-data-nodes: master-0$->{0..1}.order_detail_0$->{0..2}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_detail_sharding_algorithm
+          order_status_log:
+            actual-data-nodes: master-0$->{0..1}.order_status_log_0$->{0..2}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_status_log_sharding_algorithm
+          payment_info:
+            actual-data-nodes: master-0$->{0..1}.payment_info_0$->{0..2}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: payment_info_sharding_algorithm
+
+        sharding-algorithms:
+          orderdb_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: master-0$->{user_id%2}
+          order_info_sharding_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: order_info_0$->{user_id%3}
+          order_detail_sharding_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: order_detail_0$->{user_id%3}
+          order_status_log_sharding_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: order_status_log_0$->{user_id%3}
+          payment_info_sharding_algorithm:
+            type: INLINE
+            props:
+              algorithm-expression: payment_info_0$->{user_id%3}
+        key-generators:
+          order-id-generator:
+            type: SNOWFLAKE
+            props:
+              worker-id: ${random.int(1024)}
