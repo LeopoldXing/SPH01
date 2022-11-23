@@ -19,6 +19,8 @@ public interface CartService {
 
     Boolean deleteCheckedItems();
 
+    void updateCartItemPrice(String cartKey, List<CartInfo> cartItemList);
+
     default boolean authenticateCartNum(StringRedisTemplate redisTemplate) {
         Long count = redisTemplate.opsForHash().size(this.generateCartKey());
         return count < 200L;

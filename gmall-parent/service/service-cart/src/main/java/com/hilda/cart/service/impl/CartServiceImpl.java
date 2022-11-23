@@ -16,9 +16,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +63,9 @@ public class CartServiceImpl implements CartService {
         List<CartInfo> cartInfoList = values.parallelStream().map(value -> JSON.parseObject(String.valueOf(value), CartInfo.class))
                 .sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()))
                 .collect(Collectors.toList());
+
+        // 更新购物车商品的价格
+        CompletableFuture.runAsync(() -> this.updateCartItemPrice(generateCartKey(), cartInfoList));
 
         return cartInfoList;
     }
@@ -120,6 +125,7 @@ public class CartServiceImpl implements CartService {
             res = cartInfoMapper.insert(cartInfo) > 0;
         }
 
+        // 如果为购物车则设置过期时间
         if(!RequestUtil.isTemp()) {
             Long expire = redisTemplate.getExpire(cartKey);
             if(expire < 0L) redisTemplate.expire(cartKey, Duration.ofDays(365));
@@ -167,6 +173,22 @@ public class CartServiceImpl implements CartService {
             redisTemplate.opsForHash().delete(generateCartKey(), checkedItemSkuIdList.toArray());
 
         return true;
+    }
+
+    @Override
+    public void updateCartItemPrice(String cartKey, List<CartInfo> cartItemList) {
+        cartItemList.stream().forEach(cartInfo -> {
+            if (!ObjectUtils.isEmpty(cartInfo)) {
+                // 购物车中的价格
+                BigDecimal cartPrice = cartInfo.getCartPrice();
+                // 现查的价格
+                BigDecimal realPrice = productFeignClient.getSkuPrice(cartInfo.getSkuId());
+                if(cartPrice == null || Math.abs(cartPrice.doubleValue() - realPrice.shortValue()) >= 0.001) {
+                    cartInfo.setSkuPrice(realPrice);
+                    redisTemplate.opsForHash().put(cartKey, cartInfo.getSkuId(), JSON.toJSONString(cartInfo));
+                }
+            }
+        });
     }
 
 }
