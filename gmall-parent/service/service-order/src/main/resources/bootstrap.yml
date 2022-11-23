@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: service-order
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: http://110.40.190.216:8848
+      config:
+        prefix: ${spring.application.name}
+        file-extension: yml
+        shared-configs:
+          - data-id: zipkin.yaml
+          - data-id: redis

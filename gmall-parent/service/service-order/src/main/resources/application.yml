@@ -1,0 +1,14 @@
+server:
+  port: 7005
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://110.40.190.216:3306/gmall_order_01?useSSL=false
+    username: root
+    password: 1759714344x
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  type-aliases-package: com.hilda.model
+  mapper-locations: classpath:com/hilda/product/mapper/**.xml
