@@ -1,6 +1,5 @@
 package com.hilda.product.api;
 
-import com.hilda.common.result.Result;
 import com.hilda.model.bean.product.*;
 import com.hilda.model.bean.search.SearchAttr;
 import com.hilda.model.vo.product.CategoryVo;

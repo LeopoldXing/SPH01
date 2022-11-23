@@ -8,6 +8,10 @@ spring:
           uri: lb://service-product
           predicates:
             - Path=/admin/product/**
+        - id: service-cart
+          uri: lb://service-cart
+          predicates:
+            - Path=/*/cart/**
         - id: service-product
           uri: lb://service-product
           predicates:

@@ -1,17 +1,15 @@
 package com.hilda.weball.controller;
 
-import com.hilda.common.constant.RedisConst;
 import com.hilda.common.result.Result;
 import com.hilda.feign.CartFeignClient;
-import com.hilda.model.vo.cart.CartInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CartController {
@@ -20,18 +18,37 @@ public class CartController {
     private CartFeignClient cartFeignClient;
 
     @GetMapping("/cart.html")
-    public ModelAndView renderCartPage(HttpServletRequest request) {
+    public ModelAndView renderCartPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("cart/index");
 
-        String uid = request.getHeader(RedisConst.UID);
-        String tempUID = request.getHeader(RedisConst.TEMP_UID);
+        return modelAndView;
+    }
 
-        Result<List<CartInfo>> result = cartFeignClient.getCartItem();
+    @GetMapping("/addCart.html")
+    public ModelAndView renderAddCartPage(@RequestParam("skuId") Long skuId, @RequestParam("skuNum") Integer skuNum) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("cart/addCart");
+
+        Result<Map<String, Object>> result = cartFeignClient.addCartItem(skuId, skuNum);
+
         if (!ObjectUtils.isEmpty(result)) {
-            List<CartInfo> cartItemList = result.getData();
-            System.out.println(cartItemList);
+            Map<String, Object> map = result.getData();
+            if (!ObjectUtils.isEmpty(map)) {
+                modelAndView.addObject("skuInfo", map.get("skuInfo"));
+                modelAndView.addObject("skuNum", map.get("skuNum"));
+            }
         }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/cart/deleteChecked")
+    public ModelAndView deleteCartItem() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:http://cart.gmall.com/cart.html");
+
+        cartFeignClient.deleteCheckedItem();
 
         return modelAndView;
     }
