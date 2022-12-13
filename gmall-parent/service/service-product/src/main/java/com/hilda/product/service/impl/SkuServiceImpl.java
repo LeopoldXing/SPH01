@@ -3,9 +3,9 @@ package com.hilda.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hilda.common.config.pool.annotation.EnableSPHThreadPool;
 import com.hilda.common.constant.RedisConst;
 import com.hilda.common.execption.GmallException;
-import com.hilda.feign.ProductFeignClient;
 import com.hilda.feign.SearchFeignClient;
 import com.hilda.model.bean.base.BaseEntity;
 import com.hilda.model.bean.product.*;
@@ -17,6 +17,7 @@ import com.hilda.product.service.CategoryService;
 import com.hilda.product.service.SkuService;
 import com.hilda.product.service.TrademarkService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,13 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 @Slf4j
+@EnableSPHThreadPool
 @Service
 public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implements SkuService {
 
@@ -63,17 +68,53 @@ public class SkuServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> implemen
     @Autowired
     private TrademarkService trademarkService;
 
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
+
     @Override
     public SkuInfo getSkuInfoById(Long skuId) {
         if (skuId == null || skuId <= 0) throw new GmallException("SkuId为空", 100);
 
-        //TODO 查询 SkuInfo
-        SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
+        // 1. 查询 SkuInfo
+        CompletableFuture<SkuInfo> skuInfoFuture = CompletableFuture.supplyAsync(() -> skuInfoMapper.selectById(skuId), threadPoolExecutor);
+        SkuInfo info = null;
+        try {
+            info = skuInfoFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        SkuInfo res = new SkuInfo();
+        BeanUtils.copyProperties(info, res);
 
-        //TODO 封装 SkuInfo
-        this.packSkuInfo(skuId, skuInfo, skuImageMapper, skuAttrValueMapper, skuSaleAttrValueMapper);
+        // 2. 封装 SkuInfo
+        // 2.1 查询 SKU 图片列表
+        CompletableFuture<Void> skuImageFuture = skuInfoFuture.thenAcceptAsync(skuInfo -> {
+            LambdaQueryWrapper<SkuImage> queryWrapperImage = new LambdaQueryWrapper<>();
+            queryWrapperImage.eq(SkuImage::getSkuId, skuId);
+            List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapperImage);
+            res.setSkuImageList(skuImageList);
+        }, threadPoolExecutor);
 
-        return skuInfo;
+        // 2.2 查询 SKU 平台属性列表
+        CompletableFuture<Void> skuAttrValueFuture = skuInfoFuture.thenAcceptAsync(skuInfo -> {
+            LambdaQueryWrapper<SkuAttrValue> queryWrapperAttr = new LambdaQueryWrapper<>();
+            queryWrapperAttr.eq(SkuAttrValue::getSkuId, skuId);
+            List<SkuAttrValue> skuAttrValueList = skuAttrValueMapper.selectList(queryWrapperAttr);
+            res.setSkuAttrValueList(skuAttrValueList);
+        }, threadPoolExecutor);
+
+        // 2.3 查询 SKU 销售属性值列表
+        CompletableFuture<Void> skuSaleAttrValueFuture = skuInfoFuture.thenAcceptAsync(skuInfo -> {
+            LambdaQueryWrapper<SkuSaleAttrValue> queryWrapperSaleAttr = new LambdaQueryWrapper<>();
+            queryWrapperSaleAttr.eq(SkuSaleAttrValue::getSkuId, skuId);
+            List<SkuSaleAttrValue> skuSaleAttrValueList = skuSaleAttrValueMapper.selectList(queryWrapperSaleAttr);
+            res.setSkuSaleAttrValueList(skuSaleAttrValueList);
+        }, threadPoolExecutor);
+
+        CompletableFuture.allOf(skuImageFuture, skuAttrValueFuture, skuSaleAttrValueFuture).join();
+        return res;
     }
 
     @Override

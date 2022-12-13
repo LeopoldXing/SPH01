@@ -16,6 +16,8 @@ import org.springframework.util.ObjectUtils;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public interface SkuService extends IService<SkuInfo> {
 
@@ -40,14 +42,17 @@ public interface SkuService extends IService<SkuInfo> {
     default void packSkuInfo(Long skuId, SkuInfo skuInfo,
                              SkuImageMapper skuImageMapper,
                              SkuAttrValueMapper skuAttrValueMapper,
-                             SkuSaleAttrValueMapper skuSaleAttrValueMapper) {
+                             SkuSaleAttrValueMapper skuSaleAttrValueMapper,
+                             Executor executor) {
         if (ObjectUtils.isEmpty(skuInfo) || ObjectUtils.isEmpty(skuId)) return;
 
         // 1. 查询 SKU图片列表
-        LambdaQueryWrapper<SkuImage> queryWrapperImage = new LambdaQueryWrapper<>();
-        queryWrapperImage.eq(SkuImage::getSkuId, skuId);
-        List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapperImage);
-        skuInfo.setSkuImageList(skuImageList);
+        CompletableFuture<Void> skuImageFuture = CompletableFuture.runAsync(() -> {
+            LambdaQueryWrapper<SkuImage> queryWrapperImage = new LambdaQueryWrapper<>();
+            queryWrapperImage.eq(SkuImage::getSkuId, skuId);
+            List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapperImage);
+            skuInfo.setSkuImageList(skuImageList);
+        }, executor);
 
         // 2. 查询 SKU平台属性值列表
         LambdaQueryWrapper<SkuAttrValue> queryWrapperAttr = new LambdaQueryWrapper<>();
