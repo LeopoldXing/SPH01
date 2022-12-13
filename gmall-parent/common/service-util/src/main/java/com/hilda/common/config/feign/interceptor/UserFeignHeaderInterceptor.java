@@ -1,4 +1,4 @@
-package com.hilda.weball.interceptor;
+package com.hilda.common.config.feign.interceptor;
 
 import com.hilda.common.constant.RedisConst;
 import feign.RequestInterceptor;

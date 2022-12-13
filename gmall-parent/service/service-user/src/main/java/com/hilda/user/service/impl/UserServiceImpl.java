@@ -3,10 +3,13 @@ package com.hilda.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hilda.common.constant.RedisConst;
+import com.hilda.common.execption.GmallException;
 import com.hilda.common.util.MD5;
+import com.hilda.model.bean.user.UserAddress;
 import com.hilda.model.bean.user.UserInfo;
 import com.hilda.model.vo.user.LoginResponseVo;
 import com.hilda.model.vo.user.LoginVo;
+import com.hilda.user.mapper.UserAddressMapper;
 import com.hilda.user.mapper.UserInfoMapper;
 import com.hilda.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +17,15 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserAddressMapper userAddressMapper;
 
     @Autowired
     private UserInfoMapper userInfoMapper;
@@ -69,6 +76,17 @@ public class UserServiceImpl implements UserService {
     public Boolean logout(String token) {
         Boolean res = redisTemplate.delete(token);
         return res;
+    }
+
+    @Override
+    public List<UserAddress> getUserAddressById(Long userId) {
+        if (userId == null || userId == 0L) throw new GmallException("用户id为空", 10);
+
+        LambdaQueryWrapper<UserAddress> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserAddress::getUserId, userId);
+
+        List<UserAddress> userAddresses = userAddressMapper.selectList(queryWrapper);
+        return userAddresses;
     }
 
 }

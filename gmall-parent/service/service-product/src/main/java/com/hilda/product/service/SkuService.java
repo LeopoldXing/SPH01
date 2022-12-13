@@ -43,19 +43,19 @@ public interface SkuService extends IService<SkuInfo> {
                              SkuSaleAttrValueMapper skuSaleAttrValueMapper) {
         if (ObjectUtils.isEmpty(skuInfo) || ObjectUtils.isEmpty(skuId)) return;
 
-        //TODO 查询 SKU图片列表
+        // 1. 查询 SKU图片列表
         LambdaQueryWrapper<SkuImage> queryWrapperImage = new LambdaQueryWrapper<>();
         queryWrapperImage.eq(SkuImage::getSkuId, skuId);
         List<SkuImage> skuImageList = skuImageMapper.selectList(queryWrapperImage);
         skuInfo.setSkuImageList(skuImageList);
 
-        //TODO 查询 SKU平台属性值列表
+        // 2. 查询 SKU平台属性值列表
         LambdaQueryWrapper<SkuAttrValue> queryWrapperAttr = new LambdaQueryWrapper<>();
         queryWrapperAttr.eq(SkuAttrValue::getSkuId, skuId);
         List<SkuAttrValue> skuAttrValueList = skuAttrValueMapper.selectList(queryWrapperAttr);
         skuInfo.setSkuAttrValueList(skuAttrValueList);
 
-        //TODO 查询 SKU销售属性值列表
+        // 3. 查询 SKU销售属性值列表
         LambdaQueryWrapper<SkuSaleAttrValue> queryWrapperSaleAttr = new LambdaQueryWrapper<>();
         queryWrapperSaleAttr.eq(SkuSaleAttrValue::getSkuId, skuId);
         List<SkuSaleAttrValue> skuSaleAttrValueList = skuSaleAttrValueMapper.selectList(queryWrapperSaleAttr);
